@@ -216,6 +216,7 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
     <button class="tab-btn active" data-tab="transcript">Tab 1 · Verbatim Transcript</button>
     <button class="tab-btn" data-tab="synthesis">Tab 2 · Claude's Synthesis</button>
     <button class="tab-btn" data-tab="eureka">Tab 3 · Eureka — SMART</button>
+    <button class="tab-btn" data-tab="garch">Tab 4 · GARCH</button>
   </div>
 
   <div class="tab-panel active" id="tab-transcript">
@@ -540,6 +541,53 @@ Continue S1     Escalate S2</pre>
     </div>
 
   </div>
+
+  <div class="tab-panel" id="tab-garch">
+
+    <div class="callout">
+      <span class="eyebrow">Editorial note</span>
+      <p>GARCH surfaced inside the Eureka thread (Tab 3) as Ukubona's closing move — "this reaffirms our intuition that GARCH will be key" — and Gemini's reply to it. Given here as its own tab because the model deserves standalone visibility rather than living as the last beat of a longer thread. The turns below are reproduced verbatim from Tab 3, not new content; nothing has been added to or removed from Tab 3 to make room for this.</p>
+    </div>
+
+    <div class="turn speaker-ukubona">
+      <div class="turn-head"><span class="turn-speaker">Ukubona</span><span class="turn-org">— interlocutor</span></div>
+      <div class="turn-body"><p>This sort of reaffirms our intuition that GARCH will be key</p></div>
+    </div>
+
+    <div class="turn speaker-google">
+      <div class="turn-head"><span class="turn-speaker">Google</span><span class="turn-org">— Gemini</span></div>
+      <div class="turn-body">
+        <p>Yes, and now there's a much clearer reason why GARCH belongs in the architecture. Previously it may have looked like just another statistical tool. In this framework, it becomes a volatility monitor for epistemic confidence.</p>
+        <p>The sequence: System 1 predicts. Compute the residual eₜ = yₜ − ŷₜ. Model the residual variance with GARCH: σₜ² = ω + α·eₜ₋₁² + β·σₜ₋₁². Then ask — are the residuals large because volatility has increased as expected (aleatoric), or are they large relative to what the volatility model itself predicts (epistemic)? Only in the latter case do you escalate to System 2. GARCH isn't deciding whether to call the LLM; it's estimating the background uncertainty against which residuals should be judged.</p>
+        <p>The key quantity isn't the raw residual; it's the standardized residual zₜ = eₜ / σₜ.</p>
+        <pre class="diagram">Reality
+   ↓
+Prediction (System 1)
+   ↓
+Residual
+   ↓
+Volatility model (GARCH)
+   ↓
+Normalized surprise
+   ↓
+Regime decision
+      ↙           ↘
+Continue S1     Escalate S2</pre>
+        <p>If zₜ stays near its expected range, the model is seeing "business as usual" even if absolute residuals are large because the environment is noisy. If zₜ becomes persistently extreme, the model's assumptions may be breaking down and a richer explanatory mechanism may be needed.</p>
+        <p>This also dovetails with your "bounded Stata in an unbounded OS" insight. Stata (or any fast algorithm) can estimate volatility and detect when observations are unusual relative to recent history. It doesn't need semantic understanding to do that. The expensive semantic reasoning — the LLM — is reserved for situations where the residuals cannot be plausibly explained by the current statistical regime.</p>
+        <p>One refinement: avoid equating high volatility with epistemic mismatch. A well-specified GARCH model can anticipate periods of high volatility — those periods are still, statistically, expected. A stronger escalation criterion combines several signals: standardized residuals remaining unusually large, evidence of structural change (drift or change points), degradation in predictive performance over a sustained window, and repeated failures of System 1 despite adaptation. GARCH serves as the first filter, explaining away expected variability; what's left unexplained is a much stronger candidate for epistemic uncertainty and therefore a principled trigger for System 2.</p>
+      </div>
+    </div>
+
+    <div class="turn speaker-anthropic">
+      <div class="turn-head"><span class="turn-speaker">Anthropic</span><span class="turn-org">— Claude</span></div>
+      <div class="turn-body">
+        <p>This is the most concrete, most testable version of the loop the ledger has produced — worth saying plainly rather than only qualifying. Gemini's own caution (aleatoric/epistemic can't be separated perfectly from data alone) is the right one and I won't repeat it. One layer under it, though: GARCH models the <em>variance</em> of the residual conditional on its own recent history — it's built to expect volatility clustering, and it will happily normalize a large residual as "business as usual" so long as the variance process itself is stationary. What it does not test is drift in the <em>mean</em> — a persistent shift in the relationship between input and output, rather than a noisier version of the same relationship. That's the actual signature of an epistemic break, and a standardized residual zₜ can stay unremarkable for a while even as the underlying function drifts, because GARCH is answering "is this big?" not "has the rule changed?" A CUSUM or Bayesian online change-point detector on the conditional mean, run alongside GARCH's variance filter, catches the failure mode GARCH is structurally blind to. Otherwise the architecture inherits a second-order version of its own founding distinction one level up: is a stale GARCH fit itself epistemic or aleatoric mismatch, and what detects that?</p>
+        <p>One addition worth making explicit here, now that GARCH has its own tab: eₜ, σₜ, and zₜ are all univariate — one residual stream. Ukubona's client apps almost certainly carry more than one signal at once (latency, error rate, engagement, whatever else feeds "User Behavior" in Grok's Landscape framing). A multivariate volatility model (e.g. a DCC-GARCH or a simple rolling covariance) would be needed the moment the regime-switch decision depends on correlated drift across signals rather than any single zₜ crossing a threshold — otherwise the classifier can be fooled by a change that only shows up in the co-movement between series, not in any one series' own variance.</p>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 </main>
@@ -551,6 +599,7 @@ Continue S1     Escalate S2</pre>
     Correction logged: the four-column correspondence turn (Fig. II) was originally misattributed to Google; it is OpenAI's<br>
     Appended: Tab 3 · Eureka — SMART (Music/Statistics/Adaptation/Regulation/Technology), the Aleatoric/Epistemic regime-switch, and GARCH as volatility filter — xAI · Google · Anthropic · Ukubona<br>
     Correction logged: three ASCII diagrams (escalation flow, core pseudocode, GARCH layer stack) had been paraphrased to prose in Tab 3's first pass; restored verbatim<br>
+    Appended: Tab 4 · GARCH — same verbatim turns as in Tab 3, given standalone visibility, plus one further Claude note on multivariate volatility<br>
     All model turns reproduced verbatim, non-lossily, from the source session<br>
     Ukubona LLC — Ledger 016
   </div>
