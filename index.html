@@ -52,6 +52,22 @@ h1{ font-family:'DM Serif Display', serif; font-weight:400; font-style:italic; f
 html[data-theme="light"] .theme-toggle .icon-sun{ display:none; }
 html[data-theme="light"] .theme-toggle .icon-moon{ display:block; }
 
+.header-controls{ display:flex; align-items:flex-start; gap:10px; flex-shrink:0; margin-top:0.4rem; }
+.header-controls .theme-toggle{ margin-top:0; }
+.waffle-wrap{ position:relative; }
+.waffle-toggle{ width:36px; height:36px; border-radius:50%; border:1px solid var(--hairline); background:var(--bg-raised); color:var(--text-mid); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:color .15s, border-color .15s; }
+.waffle-toggle:hover, .waffle-toggle.active{ color:var(--amber); border-color:var(--amber); }
+.waffle-menu{ position:absolute; top:46px; right:0; width:300px; background:var(--bg-raised); border:1px solid var(--hairline); border-radius:12px; padding:14px; box-shadow:0 16px 40px rgba(0,0,0,0.4); opacity:0; visibility:hidden; transform:translateY(-6px); transition:opacity .18s ease, transform .18s ease, visibility .18s; z-index:50; }
+.waffle-menu.open{ opacity:1; visibility:visible; transform:translateY(0); }
+.waffle-menu-label{ font-family:'DM Mono', monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.12em; color:var(--text-low); margin-bottom:10px; }
+.waffle-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+.waffle-tile{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:3px; background:var(--bg-inset); border:1px solid var(--hairline); border-radius:10px; padding:12px 6px; cursor:pointer; transition:border-color .15s, transform .15s, box-shadow .15s; color:var(--text-mid); font-family:inherit; }
+.waffle-tile:hover{ border-color:var(--amber); transform:translateY(-2px); }
+.waffle-tile.active{ border-color:var(--amber); box-shadow: inset 0 0 0 1px var(--amber); }
+.wt-num{ font-family:'DM Serif Display', serif; font-style:italic; font-size:16px; color:var(--amber); line-height:1; }
+.wt-title{ font-family:'DM Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-hi); }
+.wt-sub{ font-family:'DM Sans', sans-serif; font-size:9.5px; color:var(--text-low); line-height:1.3; }
+
 main{ max-width:980px; margin:0 auto; padding:0 28px 100px; }
 
 .lede{ color:var(--text-mid); font-size:15.5px; margin-bottom:34px; }
@@ -86,7 +102,7 @@ tbody tr:hover td, tbody tr:hover th{ background:var(--bg-inset); }
 .tab-btn{ font-family:'DM Mono', monospace; font-size:12px; letter-spacing:.04em; text-transform:uppercase; background:none; border:none; color:var(--text-low); padding:14px 20px; cursor:pointer; border-bottom:2px solid transparent; transition:color .15s, border-color .15s; }
 .tab-btn:hover{ color:var(--text-hi); }
 .tab-btn.active{ color:var(--amber); border-bottom-color:var(--amber); }
-.tab-panel{ display:none; background:var(--bg-raised); border:1px solid var(--hairline); border-top:none; border-radius:0 0 12px 12px; padding:30px 28px; }
+.tab-panel{ display:none; background:var(--bg-raised); border:1px solid var(--hairline); border-radius:12px; padding:30px 28px; }
 .tab-panel.active{ display:block; }
 
 /* Transcript */
@@ -145,10 +161,31 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
       A Trial closes the loop by becoming the next Observed — the recursion that rewrites core belief.
     </div>
   </div>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme">
-    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-  </button>
+  <div class="header-controls">
+    <div class="waffle-wrap">
+      <button class="waffle-toggle" id="waffleToggle" aria-label="Open tab grid" aria-haspopup="true" aria-expanded="false" title="Tabs">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+          <circle cx="5" cy="5" r="1.7"/><circle cx="12" cy="5" r="1.7"/><circle cx="19" cy="5" r="1.7"/>
+          <circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/>
+          <circle cx="5" cy="19" r="1.7"/><circle cx="12" cy="19" r="1.7"/><circle cx="19" cy="19" r="1.7"/>
+        </svg>
+      </button>
+      <div class="waffle-menu" id="waffleMenu">
+        <div class="waffle-menu-label">Jump to tab</div>
+        <div class="waffle-grid">
+          <button class="waffle-tile" data-tab="transcript"><span class="wt-num">I</span><span class="wt-title">Transcript</span><span class="wt-sub">Verbatim roundtable</span></button>
+          <button class="waffle-tile" data-tab="synthesis"><span class="wt-num">II</span><span class="wt-title">Synthesis</span><span class="wt-sub">Claude's critical read</span></button>
+          <button class="waffle-tile" data-tab="eureka"><span class="wt-num">III</span><span class="wt-title">Eureka</span><span class="wt-sub">SMART · regime-switch</span></button>
+          <button class="waffle-tile" data-tab="garch"><span class="wt-num">IV</span><span class="wt-title">GARCH</span><span class="wt-sub">Volatility filter</span></button>
+          <button class="waffle-tile" data-tab="neuron"><span class="wt-num">V</span><span class="wt-title">Neuron</span><span class="wt-sub">Updated · genealogy</span></button>
+        </div>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
 </header>
 
 <p class="epigraph">Okubala si Kulaba — counting is not seeing.</p>
@@ -215,13 +252,6 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
 </div>
 
 <div class="tabs">
-  <div class="tab-bar">
-    <button class="tab-btn active" data-tab="transcript">Tab 1 · Verbatim Transcript</button>
-    <button class="tab-btn" data-tab="synthesis">Tab 2 · Claude's Synthesis</button>
-    <button class="tab-btn" data-tab="eureka">Tab 3 · Eureka — SMART</button>
-    <button class="tab-btn" data-tab="garch">Tab 4 · GARCH</button>
-    <button class="tab-btn" data-tab="neuron">Tab 5 · The Neuron, Updated</button>
-  </div>
 
   <div class="tab-panel active" id="tab-transcript">
 
@@ -694,14 +724,37 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   html.dataset.theme = html.dataset.theme === 'light' ? 'dark' : 'light';
 });
 
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+const waffleToggle = document.getElementById('waffleToggle');
+const waffleMenu = document.getElementById('waffleMenu');
+
+waffleToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const open = waffleMenu.classList.toggle('open');
+  waffleToggle.classList.toggle('active', open);
+  waffleToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+
+document.addEventListener('click', (e) => {
+  if (!waffleMenu.contains(e.target) && e.target !== waffleToggle) {
+    waffleMenu.classList.remove('open');
+    waffleToggle.classList.remove('active');
+    waffleToggle.setAttribute('aria-expanded', 'false');
+  }
+});
+
+document.querySelectorAll('.waffle-tile').forEach(tile => {
+  tile.addEventListener('click', () => {
+    document.querySelectorAll('.waffle-tile').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    tile.classList.add('active');
+    document.getElementById('tab-' + tile.dataset.tab).classList.add('active');
+    waffleMenu.classList.remove('open');
+    waffleToggle.classList.remove('active');
+    waffleToggle.setAttribute('aria-expanded', 'false');
   });
 });
+
+document.querySelector('.waffle-tile[data-tab="transcript"]').classList.add('active');
 </script>
 
 </body>
