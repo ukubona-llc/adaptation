@@ -109,6 +109,7 @@ tbody tr:hover td, tbody tr:hover th{ background:var(--bg-inset); }
 .turn-body p:last-child{ margin-bottom:0; }
 .turn-body strong{ color:var(--text-hi); }
 .turn-body code{ font-family:'DM Mono', monospace; background:var(--bg-inset); border:1px solid var(--hairline); border-radius:4px; padding:1px 6px; color:var(--teal); font-size:13px; }
+.diagram{ font-family:'DM Mono', monospace; font-size:12.5px; line-height:1.6; color:var(--text-mid); background:var(--bg-inset); border:1px solid var(--hairline); border-radius:8px; padding:16px 20px; margin:14px 0; overflow-x:auto; white-space:pre; }
 .turn-body em{ color:var(--text-hi); }
 .empty-seat{ font-family:'DM Mono', monospace; font-size:13px; color:var(--text-low); font-style:italic; padding:10px 0; }
 
@@ -469,9 +470,36 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
             </tbody>
           </table>
         </div>
-        <p>The insight that feels genuinely distinctive for Ukubona is where the regime switch lives. Most AI systems switch to an LLM because the user asked something complicated, confidence is low, a rule failed, or a developer manually inserted an escalation. Ukubona's proposal is different: the escalation criterion is epistemological rather than computational — classify the residual; if epistemic, escalate to System 2; if aleatoric, remain in System 1. That aligns with decades of statistical thinking: a statistician asks whether variance is explained by the model, a control theorist asks whether a disturbance is inside the design envelope, an RL researcher asks whether the environment has become non-stationary, a Bayesian asks whether the posterior should update. Ukubona asks whether the mismatch is epistemic or aleatoric — the same question in different dialects.</p>
+        <p>The insight that feels genuinely distinctive for Ukubona is where the regime switch lives. Most AI systems switch to an LLM because the user asked something complicated, confidence is low, a rule failed, or a developer manually inserted an escalation. Your proposal is different. The escalation criterion is epistemological rather than computational.</p>
+        <pre class="diagram">Residual
+    ↓
+Classify residual
+    ↓
+Epistemic? ─────► Escalate to System 2
+    │
+Aleatoric?
+    │
+Remain in System 1</pre>
+        <p>This is a very attractive architecture because it makes expensive reasoning conditional on the nature of uncertainty, not merely its magnitude. That aligns with decades of statistical thinking: a statistician asks whether variance is explained by the model, a control theorist asks whether a disturbance is inside the design envelope, an RL researcher asks whether the environment has become non-stationary, a Bayesian asks whether the posterior should update. Ukubona asks whether the mismatch is epistemic or aleatoric — the same question in different dialects.</p>
         <p>I'd tighten SMART slightly: five operators rather than five disciplines. Statistics — compress observations into evidence. Music — generate expectation through learned structure. Adaptation — interpret mismatch. Regulation — choose whether and how to update. Technology — embody the updated policy in action. Bernstein's lectures emphasize that music continuously teaches listeners to form expectations, violate them, and establish new ones — that makes "Music" a surprisingly apt name for the expectation operator, not merely an art form.</p>
-        <p>The crucial function, in pseudocode, is <code>classify(residual)</code> — everything else already exists. That classifier is where Ukubona's intellectual property and practical value could reside. One caution: distinguishing aleatoric from epistemic uncertainty is itself difficult; no method can identify them perfectly from data alone. In practice the regime switch should depend on calibrated confidence and accumulated evidence, not a single observation. Viewed this way, Ukubona is less a philosophy than a runtime architecture: a bounded algorithm continuously predicts, measures residuals, estimates whether those residuals arise from ignorance or irreducible variability, and invokes open-ended reasoning only when the evidence suggests the model — not merely the world — needs to change.</p>
+        <p>If I were expressing Ukubona's core algorithm in pseudocode, it would be almost embarrassingly simple:</p>
+        <pre class="diagram">observation = observe()
+
+prediction = system1.predict(observation)
+
+residual = observation - prediction
+
+kind = classify(residual)
+
+if kind == "aleatoric":
+    regulate(system1)
+
+else:  # epistemic
+    hypothesis = system2.reason(observation, history)
+    regulate(hypothesis)
+    system1 = compile(hypothesis)</pre>
+        <p>The crucial function is <code>classify(residual)</code>. Everything else already exists. That classifier is where Ukubona's intellectual property and practical value could reside. One caution: in statistical learning, distinguishing aleatoric from epistemic uncertainty is itself difficult. Many methods estimate both, but none can identify them perfectly from data alone. In practice, your classifier will often be probabilistic rather than definitive. That doesn't weaken the architecture — it simply means the regime switch should likely depend on calibrated confidence and accumulated evidence, not a single observation.</p>
+        <p>Viewed this way, Ukubona is less a philosophy than a runtime architecture: a bounded algorithm continuously predicts, measures residuals, estimates whether those residuals arise from ignorance or irreducible variability, and invokes open-ended reasoning only when the evidence suggests the model — not merely the world — needs to change.</p>
       </div>
     </div>
 
@@ -485,7 +513,21 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
       <div class="turn-body">
         <p>Yes, and now there's a much clearer reason why GARCH belongs in the architecture. Previously it may have looked like just another statistical tool. In this framework, it becomes a volatility monitor for epistemic confidence.</p>
         <p>The sequence: System 1 predicts. Compute the residual eₜ = yₜ − ŷₜ. Model the residual variance with GARCH: σₜ² = ω + α·eₜ₋₁² + β·σₜ₋₁². Then ask — are the residuals large because volatility has increased as expected (aleatoric), or are they large relative to what the volatility model itself predicts (epistemic)? Only in the latter case do you escalate to System 2. GARCH isn't deciding whether to call the LLM; it's estimating the background uncertainty against which residuals should be judged.</p>
-        <p>The key quantity isn't the raw residual; it's the standardized residual zₜ = eₜ / σₜ. If zₜ stays near its expected range, the model is seeing "business as usual" even if absolute residuals are large because the environment is noisy. If zₜ becomes persistently extreme, the model's assumptions may be breaking down and a richer explanatory mechanism may be needed.</p>
+        <p>The key quantity isn't the raw residual; it's the standardized residual zₜ = eₜ / σₜ.</p>
+        <pre class="diagram">Reality
+   ↓
+Prediction (System 1)
+   ↓
+Residual
+   ↓
+Volatility model (GARCH)
+   ↓
+Normalized surprise
+   ↓
+Regime decision
+      ↙           ↘
+Continue S1     Escalate S2</pre>
+        <p>If zₜ stays near its expected range, the model is seeing "business as usual" even if absolute residuals are large because the environment is noisy. If zₜ becomes persistently extreme, the model's assumptions may be breaking down and a richer explanatory mechanism may be needed.</p>
         <p>One refinement: avoid equating high volatility with epistemic mismatch. A well-specified GARCH model can anticipate periods of high volatility — those periods are still, statistically, expected. A stronger escalation criterion combines several signals: standardized residuals remaining unusually large, evidence of structural change (drift or change points), degradation in predictive performance over a sustained window, and repeated failures of System 1 despite adaptation. GARCH serves as the first filter, explaining away expected variability; what's left unexplained is a much stronger candidate for epistemic uncertainty and therefore a principled trigger for System 2.</p>
       </div>
     </div>
@@ -508,6 +550,7 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
     Attribution: xAI (Grok) · OpenAI (GPT) · Google (Gemini) · Anthropic (Claude, this instance) · Ukubona (founder, interlocutor)<br>
     Correction logged: the four-column correspondence turn (Fig. II) was originally misattributed to Google; it is OpenAI's<br>
     Appended: Tab 3 · Eureka — SMART (Music/Statistics/Adaptation/Regulation/Technology), the Aleatoric/Epistemic regime-switch, and GARCH as volatility filter — xAI · Google · Anthropic · Ukubona<br>
+    Correction logged: three ASCII diagrams (escalation flow, core pseudocode, GARCH layer stack) had been paraphrased to prose in Tab 3's first pass; restored verbatim<br>
     All model turns reproduced verbatim, non-lossily, from the source session<br>
     Ukubona LLC — Ledger 016
   </div>
