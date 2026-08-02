@@ -80,9 +80,9 @@ tbody tr:last-child th, tbody tr:last-child td{ border-bottom:none; }
 tbody tr:hover td, tbody tr:hover th{ background:var(--bg-inset); }
 .table-note{ font-family:'DM Mono', monospace; font-size:11px; color:var(--text-low); margin-bottom:44px; }
 
-/* Tabs — exactly two */
+/* Tabs */
 .tabs{ margin-top:44px; }
-.tab-bar{ display:flex; gap:2px; border-bottom:1px solid var(--hairline); margin-bottom:0; }
+.tab-bar{ display:flex; gap:2px; border-bottom:1px solid var(--hairline); margin-bottom:0; flex-wrap:wrap; }
 .tab-btn{ font-family:'DM Mono', monospace; font-size:12px; letter-spacing:.04em; text-transform:uppercase; background:none; border:none; color:var(--text-low); padding:14px 20px; cursor:pointer; border-bottom:2px solid transparent; transition:color .15s, border-color .15s; }
 .tab-btn:hover{ color:var(--text-hi); }
 .tab-btn.active{ color:var(--amber); border-bottom-color:var(--amber); }
@@ -118,6 +118,9 @@ tbody tr:hover td, tbody tr:hover th{ background:var(--bg-inset); }
 .callout p{ margin:0 0 8px; color:var(--text-mid); font-size:13.5px; line-height:1.6; }
 .callout p:last-child{ margin-bottom:0; }
 
+.suspended-badge{ display:inline-flex; align-items:center; gap:6px; font-family:'DM Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--amber); border:1px solid var(--hairline); border-radius:100px; padding:4px 12px; margin-bottom:18px; }
+.suspended-badge::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--amber); }
+
 footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px solid var(--hairline); }
 .house-rules{ font-family:'DM Mono', monospace; font-size:11px; color:var(--text-low); line-height:1.9; }
 </style>
@@ -136,7 +139,7 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
   <div style="flex:1;">
     <p class="masthead-eyebrow">Ukubona LLC · Append-Only Ledger</p>
     <h1>The Universal Problem, Cross-Model</h1>
-    <p class="masthead-sub">Ledger 016 · Aug 01 2026 · A five-voice roundtable on why bounded systems persist</p>
+    <p class="masthead-sub">Ledger 016 · Aug 01–02 2026 · A five-voice roundtable on why bounded systems persist</p>
     <div class="spine">
       <b>I</b> Observed → <b>II</b> Expected → <b>III</b> Mismatch → <b>IV</b> Hypothesis → <b>V</b> Trial → (I′, II′)<br>
       A Trial closes the loop by becoming the next Observed — the recursion that rewrites core belief.
@@ -217,6 +220,7 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
     <button class="tab-btn" data-tab="synthesis">Tab 2 · Claude's Synthesis</button>
     <button class="tab-btn" data-tab="eureka">Tab 3 · Eureka — SMART</button>
     <button class="tab-btn" data-tab="garch">Tab 4 · GARCH</button>
+    <button class="tab-btn" data-tab="neuron">Tab 5 · The Neuron, Updated</button>
   </div>
 
   <div class="tab-panel active" id="tab-transcript">
@@ -426,8 +430,8 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
               <tr><th scope="row">V</th><td>Trial</td><td>Experiment / Commit</td><td>Cadence or new tonality</td><td>Parameter update</td><td>Adaptation / New dissipative structure</td><td>Actuation</td></tr>
             </tbody>
           </table>
-          <p class="table-note">Reproduced verbatim — Google (Gemini), second Eureka-thread turn. Columns relabeled by Ukubona's original request; "Technology" and "Regulation" columns appear transposed relative to the SMART acronym order in the source text and are preserved as given.</p>
         </div>
+        <p class="table-note">Reproduced verbatim — Google (Gemini), second Eureka-thread turn. Columns relabeled by Ukubona's original request; "Technology" and "Regulation" columns appear transposed relative to the SMART acronym order in the source text and are preserved as given.</p>
         <p>A Trial that succeeds rewrites both the Observed (new data now include the outcome) and the Expected (the model is revised). The loop is closed and recursive. The crux is not "use an LLM more often." It is knowing, from the character of the mismatch, when the regime must change. The framework does not claim that every residual is meaningful or that every system is cognitive. It claims only that any system whose continued existence is non-trivial must treat mismatch as a demand for adaptation, and that the quality of its existence depends on correctly distinguishing the mismatch it can close by revising its model from the mismatch it cannot.</p>
       </div>
     </div>
@@ -449,8 +453,8 @@ footer{ max-width:980px; margin:0 auto; padding:36px 28px 80px; border-top:1px s
               <tr><th scope="row">Technology</th><td>The Closed Loop</td><td>The Enduring System</td><td>Ecosystem (the new equilibrium established)</td></tr>
             </tbody>
           </table>
-          <p class="table-note">Reproduced verbatim — xAI (Grok).</p>
         </div>
+        <p class="table-note">Reproduced verbatim — xAI (Grok).</p>
         <p>The 15-month latency to unlock "bounded Stata in unbounded OS" was the time it took to realize that the boundary itself isn't a flaw in the software — it is the sensor. It is only by having a strict, deterministic boundary (System 1 / Stata) that you can detect when the Unbounded OS has fundamentally shifted, thereby justifying the expensive cognitive load of System 2. You have built a cybernetic machine that knows exactly when it needs to stop calculating and start thinking.</p>
       </div>
     </div>
@@ -588,6 +592,84 @@ Continue S1     Escalate S2</pre>
     </div>
 
   </div>
+
+  <div class="tab-panel" id="tab-neuron">
+
+    <div class="callout">
+      <span class="eyebrow">Editorial note — the older, unlossy variant</span>
+      <p>Retained deliberately for genealogical reasons. Before the ledger's Observed→Expected→Mismatch→Hypothesis→Trial semantic pentad, and before SMART / GARCH, Ukubona pressed the same five-position structure onto a single artificial neuron — the form Grok first admitted as "fully computational" rather than forced. This tab is where the two lineages fuse: the neuron's activation gate, f(σ²,λ,ε), is the direct ancestor of Tab 4's GARCH/CUSUM split, and the update below is that split written back into the neuron's own notation. The old formula is not erased; it is superseded in place, with the delta shown.</p>
+    </div>
+
+    <div class="figure-wrap">
+      <pre class="diagram">Original (neuron, pre-GARCH):
+
+  θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²,λ,ε) → γ|ε_FGT|² → L(θᵗ⁺¹)
+   I         II            III            IV          V
+ World   Perception     Agentic       Generative    Embodied
+(prior)  (Jacobian:     (single       (loss        (weight
+          local linear   variance      estimate,    update /
+          weights wᵢ     gate)         γ-scaled)    feedback)
+          ≈ ∂ŷ/∂Lᵢ)</pre>
+      <p class="figure-cap">Fig. III — the neuron pentad as it stood before this tab, reproduced for reference. wᵢ is a Jacobian (first-order, local linear sensitivity); f(σ²,λ,ε) is a single-argument variance gate at III.</p>
+    </div>
+
+    <div class="turn speaker-ukubona">
+      <div class="turn-head"><span class="turn-speaker">Ukubona</span><span class="turn-org">— interlocutor</span></div>
+      <div class="turn-body">
+        <p>θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²,λ,ε) → γ|ε_FGT|² → L(θᵗ⁺¹) This is the first pentadic variant by Ukubona that Grok "admitted" as fully computational. That was a revolution. Then I saw how it aligned with a "neuron" (attached), and was quite compelled to take the variant seriously. But today, we are on the cusp of something latent in me for just over a quarter century: meaning of GARCH. I've been tracking all Nobel prizes in economics since I discovered nobel.se in 2003, which turns out to be the key issue in all intelligent systems — they must economize on intelligence (unmapped exploration of a massive combinatorial search space). Witnessed where we are: (attached). Looks like we need to update <code>f(σ²,λ,ε)</code>, no? Also, we generally like to think of variants of <code>L₀+Σwᵢ·Lᵢ</code> e.g. Jacobian. And you notice <code>f(σ²,λ,ε)</code> is essentially asking about regime change: Jacobian → Hessian (in a sense)</p>
+      </div>
+    </div>
+
+    <div class="turn speaker-anthropic">
+      <div class="turn-head"><span class="turn-speaker">Anthropic</span><span class="turn-org">— Claude</span></div>
+      <div class="turn-body">
+        <p>Yes, f(σ²,λ,ε) needs updating — but not by simply substituting a GARCH-estimated σ² for a static one. That's necessary, not sufficient, and the imprecision matters: it's the same blind spot flagged against GARCH in Tab 4.</p>
+        <p><strong>What GARCH gives you.</strong> σₜ² = ω + α·eₜ₋₁² + β·σₜ₋₁² models dispersion around a presumed-stable linear map. Folding that into f() is a real upgrade — the activation gate becomes history-dependent, recurrent rather than pointwise. Worth naming explicitly, not smuggled in.</p>
+        <p><strong>But GARCH is Hessian-adjacent, not Jacobian-adjacent.</strong> It tracks curvature/uncertainty of the estimate given that the weights wᵢ — the Jacobian, ∂ŷ/∂Lᵢ, in L₀+Σwᵢ·Lᵢ — are still correct. It has no mechanism for detecting that the weights themselves have drifted. A standardized residual zₜ = eₜ/σₜ can sit calmly inside its expected band for a long stretch even while the true relationship between inputs and output has shifted, because GARCH answers "is this big relative to expected volatility," not "has the rule changed."</p>
+        <p>So "regime change: Jacobian → Hessian" has the arrow half-backwards. The thing that changes regime is the Jacobian — structural break, mean drift. GARCH is the machinery watching the Hessian-like second moment around a Jacobian assumed fixed. If f() ingests only σ², it inherits the same second-order-only blindness already caught in Tab 4 — just relocated from the System 1/System 2 handoff into the neuron's own activation gate.</p>
+        <p><strong>Concrete fix</strong> — don't fold everything into one scalar. Split the test:</p>
+        <pre class="diagram">f(σ²_t, J_t, λ, ε)
+
+  σ²_t  — GARCH-style variance filter
+          (cheap, recursive, catches
+           aleatoric volatility clustering)
+
+  J_t   — independent structural-stability
+          statistic on the weights themselves
+          (CUSUM / Bayesian change-point on
+           the mean residual, or a rolling
+           estimate of ∂ŷ/∂Lᵢ vs. its own
+           history)
+
+  λ     — unchanged: cost of a false regime
+          switch (re-linearizing / recompiling
+          System 1 is expensive)
+
+  ε     — unchanged: noise floor</pre>
+        <p>This isn't cosmetic — it's the same distinction as testing whether a coefficient is stable (structural-break literature) versus modeling its conditional variance (Engle's ARCH/GARCH): different Nobel lineages, same year (2003), complementary halves of one problem. Treating "regime change" as a single σ²-driven decision quietly assumes the Jacobian is fixed and only its dispersion moves — the cheap assumption. And the cheapness is the point: an intelligence-economizing system is tempted to collapse two tests into one because two tests cost more to run. The honest version of economizing isn't collapsing them; it's running the cheap test (σ²_t) at high frequency and reserving the expensive one (J_t) for when σ²_t itself starts looking non-stationary — a second-order trigger on the trigger, the same infinite-regress shape flagged in Tab 4 (is a stale GARCH fit itself epistemic or aleatoric — what detects that?). It doesn't resolve here either. It relocates one level up, again.</p>
+      </div>
+    </div>
+
+    <div class="figure-wrap">
+      <pre class="diagram">Updated (neuron, post-GARCH):
+
+  θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²_t, J_t, λ, ε) → γ|ε_FGT|² → L(θᵗ⁺¹)
+   I         II              III                  IV          V
+ World   Perception        Agentic            Generative    Embodied
+(prior)  (Jacobian:      (two orthogonal      (loss        (weight
+          wᵢ ≈ ∂ŷ/∂Lᵢ,    tests, not one:      estimate,    update /
+          fixed regime    σ²_t — Hessian-      γ-scaled)    feedback)
+          assumed until   adjacent dispersion
+          J_t says        gate, GARCH-style;
+          otherwise)      J_t — Jacobian-
+                          stability gate,
+                          CUSUM / change-
+                          point-style)</pre>
+      <p class="figure-cap">Fig. IV — the neuron pentad, updated. Only III changes; I, II, IV, V are unaltered. The Jacobian (wᵢ, layer II) is now explicitly what J_t (layer III) is testing the stability of — the genealogical link back to Fig. III made load-bearing rather than implicit.</p>
+    </div>
+
+  </div>
+
 </div>
 
 </main>
@@ -600,6 +682,7 @@ Continue S1     Escalate S2</pre>
     Appended: Tab 3 · Eureka — SMART (Music/Statistics/Adaptation/Regulation/Technology), the Aleatoric/Epistemic regime-switch, and GARCH as volatility filter — xAI · Google · Anthropic · Ukubona<br>
     Correction logged: three ASCII diagrams (escalation flow, core pseudocode, GARCH layer stack) had been paraphrased to prose in Tab 3's first pass; restored verbatim<br>
     Appended: Tab 4 · GARCH — same verbatim turns as in Tab 3, given standalone visibility, plus one further Claude note on multivariate volatility<br>
+    Appended: Tab 5 · The Neuron, Updated — retains the original single-neuron pentad (θᵗ → L₀+Σwᵢ·Lᵢ → f(σ²,λ,ε) → γ|ε_FGT|² → L(θᵗ⁺¹)) for genealogical reference alongside its GARCH-era update, f(σ²,λ,ε) → f(σ²_t, J_t, λ, ε) — Ukubona · Anthropic<br>
     All model turns reproduced verbatim, non-lossily, from the source session<br>
     Ukubona LLC — Ledger 016
   </div>
